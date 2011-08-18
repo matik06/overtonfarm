@@ -1,0 +1,43 @@
+<?php
+
+class AuthAdapter implements Zend_Auth_Adapter_Interface
+{
+	private $_nick;
+	private $_password;
+	
+	/*
+	public function __construct($nick, $password)
+	{
+		$this->_nick = $nick;
+		$this->_password = $password;
+	}
+	*/
+	
+	/*
+	public function authenticate()
+	{
+		$db = Zend_Registry::get('db');
+		$db->setFetchMode(Zend_Db::FETCH_OBJ);
+		
+		$sql = 'SELECT * FROM Memberships WHERE nick = ?';		
+		$identity = $db->fetchRow($sql, $this->_userName);
+		$message;
+		$authenticated = false;
+		
+		if(!$identity->id)
+		{
+			$message = 'Your account nick is incorect';
+		}
+		else if($identity->password != md5($this->_password))
+		{
+			$message = 'Password is incorect';
+		}
+		else
+		{
+			$authenticated = true;			
+		}
+		
+		return new Zend_Auth_Result($authenticated, $message);		
+	}
+	*/
+}

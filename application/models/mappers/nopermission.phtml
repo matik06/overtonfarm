@@ -1,0 +1,11 @@
+<br /><br /><br /><br /><br /><br />
+<center><H1>You don't have permission to this part of website<H1><center>
+
+<?php 
+	$counter = new Model_Counter();
+	$counter->loadHits();
+	echo $counter->getHits();
+	$counter->increment();
+	echo $counter->getHits();
+	echo "succes";
+?>

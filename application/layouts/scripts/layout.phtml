@@ -1,0 +1,149 @@
+<?php echo $this->doctype() ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>  
+  	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+  	<title>J.A. Bloor Agriservices</title>
+  	
+  	<link rel="stylesheet" href="/css/global.css" type="text/css" media="screen" />
+  	  	
+	<!-- jquery -->
+	<script type="text/javascript" src="/js/jquery-1.6.2.min.js"></script>
+	<!-- lightbox -->
+	<script type="text/javascript" src="/js/slimbox2.js"></script>
+	<link rel="stylesheet" href="/css/slimbox2.css" type="text/css" media="screen" />
+	<!-- karuzela -->
+	<script type="text/javascript" src="/js/jquery.bxSlider.min.js"></script>
+	<link rel="stylesheet" href="/css/bx_styles/bx_styles.css" type="text/css" media="screen" />	
+	
+	<script type="text/javascript" src="/js/uploadPhotos.js"></script>
+  
+  	<script type="text/javascript">  		
+  		$(function(){
+  		  $('#slider1').bxSlider({
+  				displaySlideQty: 7,
+  		    	moveSlideQty: 1,
+  		    	infiniteLoop: false,
+  		  });
+  		}); 
+
+  		$(document).ready(function () {
+  		  displayNextFileUpload();
+  		});  		  		
+	</script>
+  	
+  	
+  	<meta name="Keywords" content="tractors, massey ferguson, case ih, john deere,
+  	 							ford fh, telescopic handlers, jcb, manitou,
+  	 							farm machinery, combines, cultivation equipment,
+  	 							balers, mowers, diet feeders & bedders, muck & slurry equipment,
+  	 							trailers, plant hire, digger, pottinger europrofi forage wagons,
+  	 							loaders, wheels, hedgecutters, attachments, sprayers, parts,
+	  	 						oils, fencing, bloor, Hollington, overton farm, staffordshire
+	" />
+	 
+	<meta name="Description" content="tractors, massey ferguson, case ih, john deere,
+  	 							ford fh, telescopic handlers, jcb, manitou,
+  	 							farm machinery, combines, cultivation equipment,
+  	 							balers, mowers, diet feeders & bedders, muck & slurry equipment,
+  	 							trailers, plant hire, digger, pottinger europrofi forage wagons,
+  	 							loaders, wheels, hedgecutters, attachments, sprayers, parts,
+	  	 						oils, fencing, bloor, Hollington, overton farm, staffordshire
+	" />
+  	 
+</head> 
+
+<body>
+<!-- cialo -->
+    <div id="top">
+    
+        <!-- baner -->
+        <div id="banner">            
+        
+            <img class="imageLeft" src="/images/banner_left.jpg" alt=""/>           
+            <img class="imageRight" src="/images/banner_right.jpg" alt=""/>            
+            
+            <div class="title">J.A. BLOOR  AGRISERVICES</div>
+            <div class="telephone">Telephone  07860 95 95 92</div>
+            
+            <!-- dopisz klase dla linka do logowania ! -->
+            <?php
+            	if(!Zend_Auth::getInstance()->hasIdentity())
+            	{
+            		echo '<div> <a class="log" href="/index/login/">Login</a> </div>';
+            	}
+            	else
+            	{
+            		echo '<div> <a class="log" href="/index/logout/">Logout</a> </div>';
+            	} 
+            ?>            
+            
+            
+        </div>
+        <!-- /baner -->      
+        
+        <!-- moderator | administrator -->
+        
+        <?php
+        	if(Zend_Auth::getInstance()->hasIdentity())
+        	{
+        		
+        		$user = Zend_Auth::getInstance()->getIdentity();
+        		
+        		if(Model_ManagmentController::checkPermissionStatic($user->getRole(), 'administrator'))
+        		{
+        			echo '
+						<div id="smenu">
+				        	<ul>
+				        		<li> <a class="logged" href="/administrator/adduser/">Add User</a> </li>
+				        		<li> <a class="logged" href="/administrator/manageusers/">Manage Users</a> </li>
+				        		<li> <a class="logged" href="/moderator/addmachine/">Add Machine</a> </li>
+				        		
+				        		<li> <a class="logged" href="/moderator/youraccount/">Your Account</a> </li>				        		
+				        	</ul>
+				        </div>';
+        		}
+        		else if(Model_ManagmentController::checkPermissionStatic($user->getRole(), 'moderator'))
+        		{
+        			echo '
+						<div id="smenu">
+				        	<ul>
+				        		<li> <a class="loggedmoderator" href="/moderator/addmachine/">Add Machine</a> </li>
+				        	
+				        		<li> <a class="loggedmoderator" href="/moderator/youraccount/">Your Account</a> </li>
+				        	</ul>
+				        </div>';
+        		}
+        		
+        	} 
+        ?>
+        
+        
+        
+        <!-- /moderator | administrator --> 
+        
+        
+        <!-- menu glowne --> 
+        <div id="menu">
+            <ul>
+                <li><a class="home" href="<?php echo $this->url(array('controller'=>'index','action'=>'index'));?>">Home</a></li>                
+                <li><a class="tractors" href="/tractors/machines/main/1/second/0/">Tractors</a></li>
+                <li><a class="telescopichandlers" href="/telescopichandlers/machines/main/2/second/0/">Telescopic Handlers</a></li>
+                <li><a class="farmmachinery" href="/farmmachinery/machines/main/3/second/0/">Farm Machinery</a></li>
+                <li><a class="planthire" href="/planthire/machines/main/4/second/0/">Plant Hire</a></li>
+                <li><a class="others" href="/others/machines/main/5/second/0/">Others</a></li>
+                <li><a class="parts" href="/parts/machines/main/6/second/0/">Parts</a></li>
+                <li><a class="contactus"  href="<?php echo $this->url(array('controller'=>'index','action'=>'contactus'));?>">Contact Us</a></li>
+            </ul>
+        </div>
+        <!-- /menu glowne -->        
+           
+        <div id="main">
+            <?php echo $this->layout()->content ?>
+        </div>
+            
+    </div>
+    <!-- /cialo -->
+    
+</body>
+</html>
