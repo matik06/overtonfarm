@@ -89,7 +89,6 @@ class Zend_View_Helper_Machines extends Zend_View_Helper_Abstract
 			}
 		
 			$result[] = '<div class="title">'.$title[$i].'</div>';
-			
 			//generate view(html code) for all machines
 			foreach($machines[$i] as $machine)
 			{
@@ -98,17 +97,34 @@ class Zend_View_Helper_Machines extends Zend_View_Helper_Abstract
 				$pictures = $machine->getPictures();			
 				
 				$tabPictures = array();
+				$tabPictures[] = '<div class="machine-photos">';
+				$tabPictures[] = '<ul id="carousel'.$machine->getId().'" class="jcarousel-skin-tango">';
 				foreach($pictures as $picture)
 				{
-					$tabPictures[] = '
-					<div class="img">
-	                    <a href="'.$picture->getUrl().$picture->getName().'" rel="lightbox-'.$machine->getId().'">
-	                        <img class="main" src="'.$picture->getThumbUrl().$picture->getThumbName().
-	                        '" alt="" />
-	                    </a> 
-	                    <div class="click">Click Image to Enlarge</div>
-	                </div>';				
+					$tabPictures[] = '					
+						<li>
+	                    	<div class="photos">
+	                    		<a href="'.$picture->getUrl().$picture->getName().'" rel="lightbox-'.$machine->getId().'">
+	                        		<img class="main" src="'.$picture->getThumbUrl().$picture->getThumbName().'" alt="" width="133" height="100" />
+	                        		<div class="hint">Click Image to Enlarge</div>
+	                    		</a>                     				                
+	                		</div>
+	                		
+	                    </li>';	                
+
+//					$tabPictures[] = '					
+//					<div class="img">
+//	                    <a href="'.$picture->getUrl().$picture->getName().'" rel="lightbox-'.$machine->getId().'">
+//	                        <img class="main" src="'.$picture->getThumbUrl().$picture->getThumbName().
+//	                        '" alt="" />
+//	                    </a> 
+//	                    <div class="click">Click Image to Enlarge</div>	                
+//	                </div>';				
 				}
+//				$tabPictures[] = '</div>';
+				$tabPictures[] = '</ul>';
+				$tabPictures[] = '</div>';
+				$tabPictures[] = $this->activateCarousel($machine);
 				
 				//scalanie elementow tablicy do 1 stringa
 				$allPictures = implode('', $tabPictures);
@@ -170,5 +186,15 @@ class Zend_View_Helper_Machines extends Zend_View_Helper_Abstract
 	public function setView(Zend_View_Interface $view)
 	{
 		$this->view = $view;
+	}
+	
+	private function activateCarousel(Model_Machine $machine)
+	{
+		return '
+		<script type="text/javascript">
+			activateCarousel('.$machine->getId().');
+			
+			
+		</script>';
 	}
 }

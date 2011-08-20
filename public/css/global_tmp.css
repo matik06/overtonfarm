@@ -532,34 +532,6 @@ body
 	overflow: hidden;
 }
 
-#main div.lastarrivals
-{
-	margin: 2px;
-    margin-top: 8px;
- 
-    float: left;
-    text-align: center;
-}
-
-img.galery
-{
-	display: inline;     
-    margin-right: 59px;
-    margin-top: 30px;
-    border: solid 1px black;
-    opacity:0.85;
-    filter:alpha(opacity=85)
-}
-
-img.lastarrivals
-{
-	width: 120px;
-	height: 90px;
-
-    display: inline;
-    margin-right: 5px;
-    border: thin solid black;
-}
 
 
 #main div.click
@@ -568,15 +540,7 @@ img.lastarrivals
     margin-top: 2px;
     font-weight: bold;
     font-size: 8pt;
-    margin-left: 5px;
-}
-
-#main div.click2
-{
-
-    margin-top: 2px;
-    font-weight: bold;
-    font-size: 8pt;
+    margin-right: 60px;
 }
 
 #main div.left
@@ -597,8 +561,8 @@ img.lastarrivals
     float: none;
     font-weight: bold;
     text-align: left;
-    margin-left: 215px;
-    margin-right: 420px;
+    margin-left: 225px;
+    margin-right: 430px;
     position: relative;           
     margin-top: 5px;
     margin-bottom: 3px;
@@ -666,14 +630,16 @@ div.countersmall
 	font-size: 4pt;
 }
 
+
 div.lastarrival
 {
 	margin-left: 39px;
 	margin-right: 39px;
 	margin-top: 10px;
 	padding-bottom: 5px;
-	border-bottom: solid medium;
-		
+	border-bottom: solid medium;	
+	width: auto;
+	height: 155px;			
 }
 
 div.lastarrivalstitle
@@ -683,22 +649,41 @@ div.lastarrivalstitle
 	color: color: #000033;
 	font-weight: bold;
 	font-size: 14pt;
-	text-decoration: underline;
-	
+	text-decoration: underline;	
 	border-bottom: solid medium;
 }
 
-div.machine-photos
+#main div.lastarrivals
 {
-	float: right;
-	margin-right: 15px;
+	margin: 2px;
+    margin-top: 8px; 
+    float: left;
+    text-align: center;
+    overflow: hidden;
+ 	width: auto;
 }
 
-.machine-photos div.hint
+img.lastarrivals
+{
+	width: 120px;
+	height: 90px;
+    display: inline;
+    margin-bottom: 20px;
+    border: thin solid black;    
+}
+
+div.lastarrivalsummary
 {
 	text-align: center;
-	font-size: 10px;
-	margin-right: 10px;
+	margin-top: -25px;
+}
+
+ul.photo-list
+{
+	width: 400px;
+	margin:0 0 0 0;
+	list-style: none;
+	
 }
 
 div.machine-photos
@@ -711,8 +696,4 @@ div.machine-photos
 	text-align: center;
 	font-size: 10px;
 	margin-right: 10px;
-}
-
-.machine-photos a:LINK {
-	color: black;
 }

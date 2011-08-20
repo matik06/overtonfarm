@@ -16,3 +16,12 @@ function displayNextFileUpload()
 		}
 	});	
 }
+
+function activateCarousel(machineId)
+{
+	jQuery('#carousel' + machineId +'').jcarousel({
+		vertical: false,
+		scroll: 1,
+		visible: 2
+	});
+}
