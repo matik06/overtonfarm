@@ -532,13 +532,33 @@ body
 	overflow: hidden;
 }
 
+#main div.img
+{    
+    margin: 2px;
+    margin-top: 8px;
+    height: auto;
+    width: auto;
+    float: right;
+
+    margin-right: 25px; 
+    
+}
+
 #main div.lastarrivals
 {
 	margin: 2px;
     margin-top: 8px;
- 
     float: left;
     text-align: center;
+}
+
+#main img.main
+{   
+    display: inline;     
+    margin-right: 60px;
+	border: thin solid black;
+    opacity:0.85;
+    filter:alpha(opacity=85)
 }
 
 img.galery
@@ -555,7 +575,6 @@ img.lastarrivals
 {
 	width: 120px;
 	height: 90px;
-
     display: inline;
     margin-right: 5px;
     border: thin solid black;
@@ -597,8 +616,8 @@ img.lastarrivals
     float: none;
     font-weight: bold;
     text-align: left;
-    margin-left: 215px;
-    margin-right: 420px;
+    margin-left: 225px;
+    margin-right: 430px;
     position: relative;           
     margin-top: 5px;
     margin-bottom: 3px;
@@ -676,17 +695,21 @@ div.lastarrival
 		
 }
 
-div.lastarrivalstitle
+.lastarrival div.lastarrivalstitle
 {
 	padding-bottom: 5px;
 	text-align: center;
 	color: color: #000033;
 	font-weight: bold;
 	font-size: 14pt;
-	text-decoration: underline;
-	
+	text-decoration: underline;	
 	border-bottom: solid medium;
 }
+.lastarrival div.lastarrivalsummary
+{
+	text-align: center;	
+}
+
 
 div.machine-photos
 {

@@ -111,17 +111,9 @@ class Zend_View_Helper_Machines extends Zend_View_Helper_Abstract
 	                		</div>
 	                		
 	                    </li>';	                
-
-//					$tabPictures[] = '					
-//					<div class="img">
-//	                    <a href="'.$picture->getUrl().$picture->getName().'" rel="lightbox-'.$machine->getId().'">
-//	                        <img class="main" src="'.$picture->getThumbUrl().$picture->getThumbName().
-//	                        '" alt="" />
-//	                    </a> 
-//	                    <div class="click">Click Image to Enlarge</div>	                
-//	                </div>';				
+			
 				}
-//				$tabPictures[] = '</div>';
+				
 				$tabPictures[] = '</ul>';
 				$tabPictures[] = '</div>';
 				$tabPictures[] = $this->activateCarousel($machine);
@@ -192,9 +184,7 @@ class Zend_View_Helper_Machines extends Zend_View_Helper_Abstract
 	{
 		return '
 		<script type="text/javascript">
-			activateCarousel('.$machine->getId().');
-			
-			
+			activateCarousel('.$machine->getId().');						
 		</script>';
 	}
 }

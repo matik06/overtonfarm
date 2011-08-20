@@ -26,7 +26,7 @@ class IndexController extends Zend_Controller_Action
     {
     	
         $machine = new Model_Machine();	        
-        $this->view->lm = $machine->GetLastMachines(14);   
+        $this->view->lm = $machine->GetLastMachines(7);   
     }
     
 	public function contactusAction()
