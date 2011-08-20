@@ -53,7 +53,7 @@ class ModeratorController extends Model_ManagmentController
             // Invalid entries
             $this->view->form = $form;
             return $this->render('addmachine'); // re-render the adduser form                        
-        }
+        }        
         
 		$nUploadedPhotos = 0;
         $photoUtil = new Model_PhotoUtil();
@@ -96,7 +96,7 @@ class ModeratorController extends Model_ManagmentController
       	$session->machineType = $machineType;
       	$session->photoCount = $nUploadedPhotos;      	
       	      	      
-     	$form = $this->getMachineDescriptionForm();
+     	$form = $this->getMachineDescriptionForm();     	
       	$this->view->form = $form;      	
 	}
 	

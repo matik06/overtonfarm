@@ -17,6 +17,29 @@ function displayNextFileUpload()
 	});	
 }
 
+function disableAdditionalInputFiles()
+{		
+	$("input[type='file']").each(function(index)
+	{
+		var name = $(this).attr('name');
+		if (name != "fileupd1") {
+			$(this).attr("disabled", true);
+		}
+	});
+}
+
+function enableAllInputFiles()
+{
+	
+	$('#submitUploadedPhotos').click(function() 
+	{		
+		$("input[type='file']").each(function(index)
+		{
+			$(this).removeAttr('disabled');
+		});
+	});		
+}
+
 function activateCarousel(machineId)
 {
 	jQuery('#carousel' + machineId +'').jcarousel({

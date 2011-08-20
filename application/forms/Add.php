@@ -36,13 +36,7 @@ class Form_Add extends Zend_Form
         $description->setLabel('Description');    
         //$description->setRequired(true);  
         //$description->addValidator('StringLength', false, array(1,300));  
-        $description->addFilter('StringTrim');
-        
-        
-//        $machineType = new Zend_Form_Element_Hidden('machineType');
-//		$id->setLabel('machineType');
-//		$photoCount = new Zend_Form_Element_Hidden('photoCount');
-//		$photoCount->setLabel('photoCount');
+        $description->addFilter('StringTrim');               
         	
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save');
@@ -63,25 +57,6 @@ class Form_Add extends Zend_Form
 		
 	}
 	
-//	public function setNPhotos($nPhotos) 
-//	{
-//		$this->nPhotos = $nPhotos;	
-//	}
-//	
-//	public function getNPhotos()
-//	{
-//		return $this->nPhotos;
-//	}
-//	
-//	public function setMachineType($machineType) 
-//	{
-//		$this->machineType = $machineType;	
-//	}
-//	
-//	public function getMachineType()
-//	{
-//		return $this->machineType;
-//	}
 }
 
 ?>

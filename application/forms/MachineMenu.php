@@ -39,37 +39,37 @@ class Form_MachineMenu extends Zend_Form
         $fileupd2->addValidator('count', false, 1)
         			->addValidator('Extension', false, 'jpg,png,gif,jpeg');
         $fileupd2->setDestination('pictures/');
-        $fileupd2->setAttrib('disabled', 'disabled');
+//        $fileupd2->setAttrib('disabled', 'disabled');
         
         $fileupd3 = new Zend_Form_Element_File('fileupd3');
         $fileupd3->setLabel('select third photo');
         $fileupd3->addValidator('count', false, 1)
         			->addValidator('Extension', false, 'jpg,png,gif,jpeg');        
         $fileupd3->setDestination('pictures/');
-        $fileupd3->setAttrib('disabled', 'disabled');
+//        $fileupd3->setAttrib('disabled', 'disabled');
         
         $fileupd4 = new Zend_Form_Element_File('fileupd4');
         $fileupd4->setLabel('select fourth photo');
         $fileupd4->addValidator('count', false, 1)
         			->addValidator('Extension', false, 'jpg,png,gif,jpeg');
         $fileupd4->setDestination('pictures/');
-        $fileupd4->setAttrib('disabled', 'disabled');
+//        $fileupd4->setAttrib('disabled', 'disabled');
         
         $fileupd5 = new Zend_Form_Element_File('fileupd5');
         $fileupd5->setLabel('select fifth photo');
         $fileupd5->addValidator('count', false, 1)
         			->addValidator('Extension', false, 'jpg,png,gif,jpeg');
         $fileupd5->setDestination('pictures/');
-        $fileupd5->setAttrib('disabled', 'disabled');
+//        $fileupd5->setAttrib('disabled', 'disabled');
 
         $fileupd6 = new Zend_Form_Element_File('fileupd6');
         $fileupd6->setLabel('select sixth photo');
         $fileupd6->addValidator('count', false, 1)
         			->addValidator('Extension', false, 'jpg,png,gif,jpeg');
         $fileupd6->setDestination('pictures/');   
-        $fileupd6->setAttrib('disabled', 'disabled');
+//        $fileupd6->setAttrib('disabled', 'disabled');
 			 
-		$submit = new Zend_Form_Element_Submit('submit');
+		$submit = new Zend_Form_Element_Submit('submitUploadedPhotos');
 		$submit->setLabel('Ok');
 			 
 		$this->addElements(array($MachineType, $fileupd1, $fileupd2, $fileupd3, $fileupd4, $fileupd5, $fileupd6, $submit));
