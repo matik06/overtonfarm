@@ -62,7 +62,7 @@ class Model_Mapper_Picture
     	t.id \'thumbId\' ,t.name \'thumbName\', t.url \'thumbUrl\' 
     	FROM Pictures as p , Thumbs as t
     	WHERE (p.idMachine='.$id_Machine.')AND(p.id=t.idPicture)
-    	ORDER BY p.id ASC';
+    	ORDER BY p.name ASC';
         	
         $resultSet = $this->getDb()->fetchAll($sql);
        //array to store all machines

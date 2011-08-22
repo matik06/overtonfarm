@@ -739,3 +739,8 @@ div.machine-photos
 .machine-photos a:LINK {
 	color: black;
 }
+
+input.edit-machine
+{
+	width: 135px;
+}

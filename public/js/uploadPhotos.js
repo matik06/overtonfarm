@@ -1,3 +1,4 @@
+$.version = "?v=0.01";
 $.rootName = 'fileupd';
 
 function displayNextFileUpload()
@@ -29,8 +30,7 @@ function disableAdditionalInputFiles()
 }
 
 function enableAllInputFiles()
-{
-	
+{	
 	$('#submitUploadedPhotos').click(function() 
 	{		
 		$("input[type='file']").each(function(index)
@@ -47,4 +47,14 @@ function activateCarousel(machineId)
 		scroll: 1,
 		visible: 2
 	});
+}
+
+function refreshCss()
+{
+	var currentUrl = document.URL;
+	
+	if(currentUrl.indexOf($.version) == -1)
+	{
+		window.location.replace(currentUrl + $.version);	
+	}	
 }

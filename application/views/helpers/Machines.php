@@ -35,13 +35,23 @@ class Zend_View_Helper_Machines extends Zend_View_Helper_Abstract
 	 */
 	public function GetDeleteForm($id, $mainId)
 	{	
-        return 
-        
+        return         
         '<form method="post" action="/moderator/deletemachineprocess">
-        	<input type="submit" value="Delete">
+        	<input type="submit" value="Delete" class="edit-machine">
         	<input type="hidden" name="id" value="'.$id.'">        	
         	<input type="hidden" name="mainId" value="'.$mainId.'">
-        </form>';        
+        </form>';
+                
+	}
+	
+	public function getEditMachineForm($id, $mainId)
+	{
+		return
+		'<form method="post" action="/moderator/editmachineprocess">
+        	<input type="submit" value="Edit Details" class="edit-machine">
+        	<input type="hidden" name="id" value="'.$id.'">        	
+        	<input type="hidden" name="mainId" value="'.$mainId.'">
+        </form>';       
 	}
 	    
 	
@@ -64,6 +74,19 @@ class Zend_View_Helper_Machines extends Zend_View_Helper_Abstract
 		else
 		{
 			return '';	
+		}
+	}
+	
+	public function getEditMachineButton($machineId, $mainId)
+	{
+		$isModerator = $this->checkRole();
+		
+		if ($isModerator) {
+			return $this->getEditMachineForm($machineId, $mainId);
+		}
+		else 
+		{
+			return '';
 		}
 	}
 	
@@ -143,7 +166,9 @@ class Zend_View_Helper_Machines extends Zend_View_Helper_Abstract
 	                    <br />
 	                    Description<br />';
 				
-	            $result[] = $this->DeleteButton($machine->getId(), $mainId);
+	            $machineId = $machine->getId();
+	            $result[] = $this->getEditMachineButton($machineId, $mainId);
+	            $result[] = $this->DeleteButton($machineId, $mainId);
 	                
 				$result[] = '
 	                </div>

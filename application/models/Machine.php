@@ -448,6 +448,11 @@ class Model_Machine
     {    	    	    	
     	return $this->getMapper()->GetLastMachines($number);   		
     }
+    
+    public function getMachineById($id)
+    {
+    	return $this->getMapper()->getMachineById($id);
+    }
 }
 
 ?>

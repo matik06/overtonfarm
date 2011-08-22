@@ -96,7 +96,7 @@ class ModeratorController extends Model_ManagmentController
       	$session->machineType = $machineType;
       	$session->photoCount = $nUploadedPhotos;      	
       	      	      
-     	$form = $this->getMachineDescriptionForm();     	
+     	$form = $this->getMachineDescriptionForm("addmachineprocess2");     	
       	$this->view->form = $form;      	
 	}
 	
@@ -152,7 +152,7 @@ class ModeratorController extends Model_ManagmentController
         }
         
          // Get our form and validate it
-        $form = $this->getMachineDescriptionForm();
+        $form = $this->getMachineDescriptionForm("addmachineprocess2");
         
         //check validation        									
         if (!$form->isValid($request->getPost())) 
@@ -322,17 +322,15 @@ class ModeratorController extends Model_ManagmentController
 	
 
 	 
-	public function getMachineDescriptionForm()
+	public function getMachineDescriptionForm($controllerMethodName)
 	{
 		return new Form_Add(array(
-            'action' => '/moderator/addmachineprocess2',
+            'action' => '/moderator/'.$controllerMethodName,
             'method' => 'post',
         ));
         
 	}
-	
-	
-	//----deleting machinery----//
+		
 
 	/**
 	 * Delete choosen machine and redirect user back to the same place
@@ -341,30 +339,134 @@ class ModeratorController extends Model_ManagmentController
 	 */
 	public function deletemachineprocessAction()
 	{
-	$request = $this->getRequest();
-			
+		$request = $this->getRequest();
+
+		//generate last url
+		$mainId = $_POST['mainId'];
+        $lastURL = $this->getLastUrl($mainId);	
+		
 	    //Check if we have a POST request
         if (!$request->isPost()) 
         {        	
             $this->_redirect('/index/index/');
         }
-              
+
+        //delete machine
         $machine = new Model_Machine();
         $machine->delete($_POST["id"]);
         
-        $type = strtolower($machine->getMainTypeNameById($_POST['mainId']));
-        
-        //chiecking is type is 2-words seperated by space
-        $space = strpos($type, " ");
-        
-        if($space != '')
-        {
-    		$first = substr($type, 0, $space);
-			$second = substr($type, $space+1);
+                
+        $this->_redirect($lastURL);        
+	}
 
-			$type = $first.$second;
+
+	/**
+	 * 
+	 * display form with machiene datails
+	 */
+	public function editmachineprocessAction()
+	{
+		$request = $this->getRequest();
+		           	     	        	
+        $mainId = $_POST['mainId'];
+        $lastURL = $this->getLastUrl($mainId);	
+	    //Check if we have a POST request
+        if (!$request->isPost()) 
+        {        	        
+            $this->_redirect($lastURL);
         }
         
-        $this->_redirect($type.'/machines/main/'.$_POST["mainId"].'/secondary/0/');        
+        $machine = new Model_Machine();
+        
+        //get machine by id 
+        $machineId = $_POST["id"];
+        $machine = $machine->getMachineById($machineId);   
+
+        //save machine and last url address in session
+        $session = Zend_Registry::get('session');
+      	$session->machine = $machine;
+      	$session->lastURL = $lastURL;
+        
+        //create and fill form with machine details
+        $form = $this->getMachineDescriptionForm("updatemachineprocess");        
+        $form->getElement("name")->setValue($machine->getName());
+        $form->getElement("yearBuilt")->setValue($machine->getYearBuilt());
+        $form->getElement("hours")->setValue($machine->getHours());
+        $form->getElement("price")->setValue($machine->getPrice());
+        $form->getElement("description")->setValue($machine->getDescription());
+        
+      	$this->view->form = $form;      	                
 	}
+	
+	/**
+	 * 
+	 * Enter Update machine details and redirect back
+	 */
+	public function updatemachineprocessAction()
+	{				
+		$request = $this->getRequest();
+		
+	    //Check if we have a POST request
+        if (!$request->isPost()) 
+        {        	
+            $this->_redirect('/moderator/addmachine');
+        }
+        
+         // Get our form and validate it
+        $form = $this->getMachineDescriptionForm("updatemachineprocess");
+        
+        //check validation        									
+        if (!$form->isValid($request->getPost())) 
+        {
+            // Invalid entries
+            $this->view->form = $form;
+            return $this->render('updatemachineprocess'); // re-render the adduser form                        
+        }
+
+        //get machine from session
+        $session = Zend_Registry::get('session');        
+		$machine = $session->machine;		
+      	
+		//update machine with modifications from form
+      	$machine->setDescription($form->getElement('description')->getValue());      	
+      	$machine->setHours($form->getElement('hours')->getValue());
+      	$machine->setName($form->getElement('name')->getValue());
+      	$machine->setPrice($form->getElement('price')->getValue());
+      	$machine->setYearBuilt($form->getElement('yearBuilt')->getValue());        
+        
+        $machine->save();
+      	
+        $lastUrl = $session->lastURL;
+        $this->_redirect($lastUrl);
+	}
+	
+	/**
+	 * 
+	 * generate last url addres from id machine main type
+	 * used in buttons: edit description, delete
+	 * 
+	 * @param $mainIdType
+	 */	
+	private function getLastUrl($mainIdType)
+	{
+		//get name of machine main type
+		$machine = new Model_Machine();
+		$mainType = $machine->getMainTypeNameById($mainIdType);
+		$mainType = strtolower($mainType);
+		
+		//chiecking is type is 2-words seperated by space
+        $space = strpos($mainType, " ");
+		
+        //removes white spaces it name contains more words
+        if($space != '')
+        {        	
+    		$first = substr($mainType, 0, $space);
+			$second = substr($mainType, $space+1);
+
+			$mainType = $first.$second;
+        }
+	        
+        return $mainType.'/machines/main/'.$mainIdType.'/secondary/0/';
+	}
+	
 }

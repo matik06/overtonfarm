@@ -14,7 +14,6 @@ class Model_Mapper_Machine
         {
            $this->db = Zend_Registry::get('db');
            $this->db->setFetchMode(Zend_Db::FETCH_OBJ);           
-           //$this->db = Zend_Db::factory($asdf,$sadf);           
         }       
         
         return $this;
@@ -35,7 +34,7 @@ class Model_Mapper_Machine
     }
 	
   /**
-     * Fetch all role entries
+     * Fetch all machines by main and secondary type
      * 
      * @return array
      */
@@ -72,12 +71,48 @@ class Model_Mapper_Machine
                   ->setDayOfEntry($row->dayOfEntry)    
                   ->setPictures($arraypict)                              
                   ->setMapper($this);    
-                            
-                //  -
             //add machine to array
             $entries[] = $entry;            
         }
         return $entries;        
+    }
+    
+    /**
+     * return Model_Machine object by id
+     * 
+     * @param $id
+     */
+    public function getMachineById($id)
+    {
+    
+    	$sql = 'SELECT * FROM Machines	    			
+    			WHERE id = '.$id;
+    			   			    	
+        $queryResult = $this->getDb()->fetchAll($sql);        
+        $machine = new Model_Machine();        
+        $pict = new Model_Picture();        
+
+        foreach ($queryResult as $row)
+        {
+        	$pict->setMachineId($row->id);
+        	$arraypict = $pict->fetchAll();
+        	
+       		$machine->setId($row->id)  
+        		    ->setIdUser($row->idUser)
+           	  		->setMainType($row->idMainType)
+           	  		->setSecondaryType($row->idSecondaryType)           	
+              		->setName($row->name)
+              		->setYearBuilt($row->yearBuilt)
+              		->setDescription($row->description)  
+              		->setPrice($row->price)
+              		->setHours($row->hours)
+              		->setCondition($row->condition)
+              		->setDayOfEntry($row->dayOfEntry)    
+              		->setPictures($arraypict)                              
+              		->setMapper($this); 
+        }
+                                                     
+        return $machine;
     }
     
     
@@ -184,12 +219,12 @@ class Model_Mapper_Machine
         	'hours' =>(string)$machine->getHours(),
         	'price' =>(string)$machine->getPrice(),
         	'description' => $machine->getDescription(),
-        	'condition' => $machine->getCondition(),
-        	//'dayOfEntry' => (string)$machine->getDayOfEntry()           
+        	'condition' => $machine->getCondition(),           
         );
+        
         //jesli w obiekcie user nie ma ustawionego id to oznacza to ze jest to
         //nowy obiekt i wkladamy go do bazy
-         if ( null === ( $id = $machine->getId() ) ) 
+        if ( null === ( $id = $machine->getId() ) ) 
         {
            unset($dataMachine['id']);
            $this->getDb()->insert('Machines',$dataMachine);
