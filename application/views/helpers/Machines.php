@@ -53,7 +53,16 @@ class Zend_View_Helper_Machines extends Zend_View_Helper_Abstract
         	<input type="hidden" name="mainId" value="'.$mainId.'">
         </form>';       
 	}
-	    
+
+	private function getSwapMachineForm($id, $mainId)
+	{
+		return
+		'<form method="post" action="/moderator/swapphotosprocess">
+        	<input type="submit" value="Swap Photos" class="edit-machine">
+        	<input type="hidden" name="id" value="'.$id.'">        	
+        	<input type="hidden" name="mainId" value="'.$mainId.'">
+        </form>';     
+	}
 	
 	/**
 	 * If user is logged and has administrator or moderator permission 
@@ -90,6 +99,17 @@ class Zend_View_Helper_Machines extends Zend_View_Helper_Abstract
 		}
 	}
 	
+	public function getSwapPhotosButton($machineId, $mainId)
+	{
+		$isModerator = $this->checkRole();
+		
+		if($isModerator) {
+			return $this->getSwapMachineForm($machineId, $mainId);
+		} else {
+			return '';
+		}
+	} 
+	
 	
 	/**
 	 * Return html code contains machines
@@ -115,7 +135,7 @@ class Zend_View_Helper_Machines extends Zend_View_Helper_Abstract
 			//generate view(html code) for all machines
 			foreach($machines[$i] as $machine)
 			{
-			
+				$machineId = $machine->getId();			
 				//generate html code for all pictures for single machine
 				$pictures = $machine->getPictures();			
 				
@@ -138,8 +158,12 @@ class Zend_View_Helper_Machines extends Zend_View_Helper_Abstract
 				}
 				
 				$tabPictures[] = '</ul>';
+				$tabPictures[] = $this->getSwapPhotosButton($machineId, $mainId);				
+				
 				$tabPictures[] = '</div>';
+				
 				$tabPictures[] = $this->activateCarousel($machine);
+				
 				
 				//scalanie elementow tablicy do 1 stringa
 				$allPictures = implode('', $tabPictures);
@@ -166,32 +190,33 @@ class Zend_View_Helper_Machines extends Zend_View_Helper_Abstract
 	                    <br />
 	                    Description<br />';
 				
-	            $machineId = $machine->getId();
+	            
 	            $result[] = $this->getEditMachineButton($machineId, $mainId);
 	            $result[] = $this->DeleteButton($machineId, $mainId);
+	            
 	                
 				$result[] = '
 	                </div>
 	                <div class="right">
-	                    '.$machine->getName().'<br />
+	                    <span class="machineName">'.$machine->getName().'</span><br />
 	                    <br />
 	
-	                    '.$machine->getYearBuilt().'<br />';
+	                    <span class="machineYearBuilt">'.$machine->getYearBuilt().'</span><br />';
 				
 				if($machine->getHours() != '')
 				{
-					$result[] = $machine->getHours().'<br />';
+					$result[] = '<span class="machineHours">'.$machine->getHours().'</span><br />';
 				}
 	                    
 	                    
 				$result[] ='	                    
-	                    £ '.$machine->getPrice().'<br />
+	                    <span class="machinePrice">£ '.$machine->getPrice().'</span><br />
 	                    <br />
-	                    '.$machine->getDescription().'                
+	                    <span class="machineDescription">'.$machine->getDescription().'</span>                
 	                </div>               
-	            </div> 
-	            
+	            </div> 	            	            
 				';			
+				
 			}
 		}
 		
@@ -211,5 +236,5 @@ class Zend_View_Helper_Machines extends Zend_View_Helper_Abstract
 		<script type="text/javascript">
 			activateCarousel('.$machine->getId().');						
 		</script>';
-	}
+	}		
 }

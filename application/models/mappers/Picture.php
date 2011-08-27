@@ -58,11 +58,11 @@ class Model_Mapper_Picture
      */
     public function fetchAll($id_Machine)
     {
-    	$sql = 'SELECT p.id \'id\', p.idMachine \'idMachine\', p.name \'name\', p.url \'url\',
-    	t.id \'thumbId\' ,t.name \'thumbName\', t.url \'thumbUrl\' 
+    	$sql = 'SELECT p.id \'id\', p.idMachine \'idMachine\', p.name \'name\', p.url \'url\', p.ordr \'ordr\',
+    	t.id \'thumbId\' ,t.name \'thumbName\', t.url \'thumbUrl\', t.idPicture \'thumbIdPicture\'  
     	FROM Pictures as p , Thumbs as t
     	WHERE (p.idMachine='.$id_Machine.')AND(p.id=t.idPicture)
-    	ORDER BY p.name ASC';
+    	ORDER BY p.ordr ASC';
         	
         $resultSet = $this->getDb()->fetchAll($sql);
        //array to store all machines
@@ -75,15 +75,71 @@ class Model_Mapper_Picture
             	  ->setMachineId($row->idMachine)  	  
             	  ->setName($row->name) 
             	  ->setUrl($row->url) 
+            	  ->setOrder($row->ordr)
            		  ->setThumbid($row->thumbId) 
              	  ->setThumbName($row->thumbName) 	
-            	  ->setThumbUrl($row->thumbUrl) 	
+             	  ->setThumbPictureId($row->thumbIdPicture)
+            	  ->setThumbUrl($row->thumbUrl) 	            	  
             	  ->setMapper($this);   
             //add machine to array
             $entries[] = $entry;            
         	}
+        	
         	return $entries;   
     }
-  
+    
+    public function save(Model_Picture $picture, $idMachine) 
+    {
+    	    	
+		$dataPictures = array
+       	(
+	        'idMachine'	=> $idMachine,
+	        'name'		=> $picture->getName(),
+	        'url'		=> $picture->getUrl(),
+       		'ordr'		=> $picture->getOrder()        			        
+       	);
+			    
+        $this->getDb()->insert('Pictures',$dataPictures);
+        $idPicturetmp = $this->getDb()->lastInsertId();
+        
+        $dataThumbs = array
+        (
+        	'idPicture' => (string)$idPicturetmp,
+        	'name' => $picture->getThumbName(),
+        	'url' => $picture->getThumbUrl()
+        );
+        
+        $this->getDb()->insert('Thumbs',$dataThumbs);
+            	
+        unset($dataPictures);
+        unset($dataThumbs);
+    }
+    
+
+
+    public function update(Model_Picture $picture)
+    {
+    	$dataPictures = array
+       	(
+	        'idMachine'	=> $picture->getMachineId(),
+	        'name'		=> $picture->getName(),
+	        'url'		=> $picture->getUrl(),
+       		'ordr'		=> $picture->getOrder()        			        
+       	);
+			    
+        $this->getDb()->update('Pictures', $dataPictures, array('id = ?' => $picture->getId()));        
+        
+        $dataThumbs = array
+        (
+        	'idPicture' => $picture->getThumbPictureId(),
+        	'name' => $picture->getThumbName(),
+        	'url' => $picture->getThumbUrl()
+        );
+        
+        $this->getDb()->update('Thumbs', $dataThumbs, array('id = ?' => $picture->getThumbId()));
+            	
+        unset($dataPictures);
+        unset($dataThumbs);
+    }      
 }
 ?>

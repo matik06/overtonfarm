@@ -27,6 +27,13 @@ class ModeratorController extends Model_ManagmentController
         ));
 	}
 	
+	public function getMachineDetailsAndMachineType() {
+		return new Form_MachineDetailsAndMachineType(array(
+		 	'action' => '/moderator/updatemachineprocess',
+            'method' => 'post',
+		));
+	}
+	
 	public function addmachineAction()
 	{
 		$this->view->form = $this->getMachineTypeForm();
@@ -186,7 +193,11 @@ class ModeratorController extends Model_ManagmentController
       	$machine->setYearBuilt($form->getElement('yearBuilt')->getValue());
         $machine->setMainType($MainType->id);
       	$machine->setSecondaryType($SecondaryType->id);
+      	
+      	
         $machine->setPictures($pictures);
+        
+        
         
         $machine->save();
       	
@@ -208,6 +219,7 @@ class ModeratorController extends Model_ManagmentController
       		$nextPhotoId++;
       		$picture->setUrl('/'.$url);
       		$picture->setThumbUrl('/'.$url.'thumbs/');
+      		$picture->setOrder($i);
       		
       		$pictures[] = $picture;
       	}
@@ -324,7 +336,7 @@ class ModeratorController extends Model_ManagmentController
 	 
 	public function getMachineDescriptionForm($controllerMethodName)
 	{
-		return new Form_Add(array(
+		return new Form_MachineDetails(array(
             'action' => '/moderator/'.$controllerMethodName,
             'method' => 'post',
         ));
@@ -385,15 +397,16 @@ class ModeratorController extends Model_ManagmentController
         //save machine and last url address in session
         $session = Zend_Registry::get('session');
       	$session->machine = $machine;
-      	$session->lastURL = $lastURL;
+      	$session->lastURL = $lastURL;      	
         
         //create and fill form with machine details
-        $form = $this->getMachineDescriptionForm("updatemachineprocess");        
+        $form = $this->getMachineDetailsAndMachineType();
+        $form->getElement("machineType")->setValue($machine->getSecondaryType());        
         $form->getElement("name")->setValue($machine->getName());
         $form->getElement("yearBuilt")->setValue($machine->getYearBuilt());
         $form->getElement("hours")->setValue($machine->getHours());
         $form->getElement("price")->setValue($machine->getPrice());
-        $form->getElement("description")->setValue($machine->getDescription());
+        $form->getElement("description")->setValue($machine->getDescription());        
         
       	$this->view->form = $form;      	                
 	}
@@ -413,7 +426,7 @@ class ModeratorController extends Model_ManagmentController
         }
         
          // Get our form and validate it
-        $form = $this->getMachineDescriptionForm("updatemachineprocess");
+        $form = $this->getMachineDetailsAndMachineType(); 
         
         //check validation        									
         if (!$form->isValid($request->getPost())) 
@@ -432,13 +445,49 @@ class ModeratorController extends Model_ManagmentController
       	$machine->setHours($form->getElement('hours')->getValue());
       	$machine->setName($form->getElement('name')->getValue());
       	$machine->setPrice($form->getElement('price')->getValue());
-      	$machine->setYearBuilt($form->getElement('yearBuilt')->getValue());        
-        
+      	$machine->setYearBuilt($form->getElement('yearBuilt')->getValue()); 
+      	$machine->setSecondaryType($form->getElement("machineType")->getValue());               
+      	
         $machine->save();
       	
         $lastUrl = $session->lastURL;
         $this->_redirect($lastUrl);
 	}
+	
+	public function swapphotosprocessAction() 
+	{
+		$request = $this->getRequest();
+		           	     	        	
+        $mainId = $_POST['mainId'];
+        $lastURL = $this->getLastUrl($mainId);
+        	
+	    //Check if we have a POST request
+        if (!$request->isPost()) 
+        {        	        
+            $this->_redirect($lastURL);
+        }
+        
+        $machine = new Model_Machine();
+        
+        
+        //get machine by id 
+        $machineId = $_POST["id"];
+        $machine = $machine->getMachineById($machineId);
+
+        $machinePictures = $machine->getPictures();
+        $picture1 = $machinePictures[0];
+        $picture2 = $machinePictures[1];
+        
+        $temp = $picture1->getOrder();
+		$picture1->setOrder($picture2->getOrder());
+		$picture2->setOrder($temp);		
+		
+		$picture1->update();
+		$picture2->update();
+
+
+        $this->_redirect($lastURL);
+	}	
 	
 	/**
 	 * 

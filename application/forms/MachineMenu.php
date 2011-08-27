@@ -2,14 +2,32 @@
 
 class Form_MachineMenu extends Zend_Form
 {
+	private $machineType;
+	private $fileupd1;
+	private $fileupd2;
+	private $fileupd3;
+	private $fileupd4;
+	private $fileupd5;
+	private $fileupd6;
+	private $submit;
+	
+	
 	public function init()
-	{	
-
+	{
 		$this->setAttrib('enctype', 'multipart/form-data');	
+		$this->initializeComponents();	
 		
-		$MachineType = new Zend_Form_Element_Select('machineType');
-		$MachineType->setLabel('Machine Type');
-		$MachineType->setRequired(true);
+			 
+		$this->addElements(array($this->machineType, $this->fileupd1, $this->fileupd2,
+		 		$this->fileupd3, $this->fileupd4, $this->fileupd5, $this->fileupd6, $this->submit));
+	}
+	
+	public function initializeComponents() {
+		
+		
+		$this->machineType = new Zend_Form_Element_Select('machineType');
+		$this->machineType->setLabel('Machine Type');
+		$this->machineType->setRequired(true);
 		
 		//pobranie typów głównych
 		$MTypes = Model_Mapper_Machine::getMainTypes();		
@@ -23,55 +41,54 @@ class Form_MachineMenu extends Zend_Form
 			{
 				//label składający się z typu głównego oraz podtypu
 				$name = $mainMachineType->name.' : '.$secondaryMachineType->name;
-				$MachineType->addMultiOption($secondaryMachineType->id, $name);
+				$this->machineType->addMultiOption($secondaryMachineType->id, $name);
 			}
 		}			
 			
 			 
-		$fileupd1 = new Zend_Form_Element_File('fileupd1');
-        $fileupd1->setLabel('select first photo');
-        $fileupd1->addValidator('count', false, 1)
+		$this->fileupd1 = new Zend_Form_Element_File('fileupd1');
+        $this->fileupd1->setLabel('select first photo');
+        $this->fileupd1->addValidator('count', false, 1)
         			->addValidator('Extension', false, 'jpg,png,gif,jpeg');
-        $fileupd1->setDestination('pictures/');
+        $this->fileupd1->setDestination('pictures/');
        
-        $fileupd2 = new Zend_Form_Element_File('fileupd2');
-        $fileupd2->setLabel('select second photo');
-        $fileupd2->addValidator('count', false, 1)
+        $this->fileupd2 = new Zend_Form_Element_File('fileupd2');
+        $this->fileupd2->setLabel('select second photo');
+        $this->fileupd2->addValidator('count', false, 1)
         			->addValidator('Extension', false, 'jpg,png,gif,jpeg');
-        $fileupd2->setDestination('pictures/');
-//        $fileupd2->setAttrib('disabled', 'disabled');
+        $this->fileupd2->setDestination('pictures/');
         
-        $fileupd3 = new Zend_Form_Element_File('fileupd3');
-        $fileupd3->setLabel('select third photo');
-        $fileupd3->addValidator('count', false, 1)
+        $this->fileupd3 = new Zend_Form_Element_File('fileupd3');
+        $this->fileupd3->setLabel('select third photo');
+        $this->fileupd3->addValidator('count', false, 1)
         			->addValidator('Extension', false, 'jpg,png,gif,jpeg');        
-        $fileupd3->setDestination('pictures/');
-//        $fileupd3->setAttrib('disabled', 'disabled');
+        $this->fileupd3->setDestination('pictures/');
         
-        $fileupd4 = new Zend_Form_Element_File('fileupd4');
-        $fileupd4->setLabel('select fourth photo');
-        $fileupd4->addValidator('count', false, 1)
+        $this->fileupd4 = new Zend_Form_Element_File('fileupd4');
+        $this->fileupd4->setLabel('select fourth photo');
+        $this->fileupd4->addValidator('count', false, 1)
         			->addValidator('Extension', false, 'jpg,png,gif,jpeg');
-        $fileupd4->setDestination('pictures/');
-//        $fileupd4->setAttrib('disabled', 'disabled');
+        $this->fileupd4->setDestination('pictures/');
         
-        $fileupd5 = new Zend_Form_Element_File('fileupd5');
-        $fileupd5->setLabel('select fifth photo');
-        $fileupd5->addValidator('count', false, 1)
+        $this->fileupd5 = new Zend_Form_Element_File('fileupd5');
+        $this->fileupd5->setLabel('select fifth photo');
+        $this->fileupd5->addValidator('count', false, 1)
         			->addValidator('Extension', false, 'jpg,png,gif,jpeg');
-        $fileupd5->setDestination('pictures/');
-//        $fileupd5->setAttrib('disabled', 'disabled');
+        $this->fileupd5->setDestination('pictures/');
 
-        $fileupd6 = new Zend_Form_Element_File('fileupd6');
-        $fileupd6->setLabel('select sixth photo');
-        $fileupd6->addValidator('count', false, 1)
+        $this->fileupd6 = new Zend_Form_Element_File('fileupd6');
+        $this->fileupd6->setLabel('select sixth photo');
+        $this->fileupd6->addValidator('count', false, 1)
         			->addValidator('Extension', false, 'jpg,png,gif,jpeg');
-        $fileupd6->setDestination('pictures/');   
-//        $fileupd6->setAttrib('disabled', 'disabled');
+        $this->fileupd6->setDestination('pictures/');   
 			 
-		$submit = new Zend_Form_Element_Submit('submitUploadedPhotos');
-		$submit->setLabel('Ok');
-			 
-		$this->addElements(array($MachineType, $fileupd1, $fileupd2, $fileupd3, $fileupd4, $fileupd5, $fileupd6, $submit));
+		$this->submit = new Zend_Form_Element_Submit('submitUploadedPhotos');
+		$this->submit->setLabel('Ok');
 	}
+	
+	public function getMachineType() 
+	{
+		return $this->machineType;
+	}
+	
 }

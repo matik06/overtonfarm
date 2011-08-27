@@ -233,26 +233,7 @@ class Model_Mapper_Machine
            $test =0;
            foreach ($pict as $item)
            {	
-           		$tmp = $item;
-           		$dataPictures = array
-	        	(
-	        		'idMachine'	=> $idMachine,
-	        		'name'		=> $tmp->getName(),
-	        		'url'		=> $tmp->getUrl()        		
-	        	);
-			    
-			    ++$test;
-            	$this->getDb()->insert('Pictures',$dataPictures);
-              	$idPicturetmp = $this->getDb()->lastInsertId();
-            	$dataThumbs = array
-            	(
-            		'idPicture' => (string)$idPicturetmp,
-            		'name' => $tmp->getThumbName(),
-            		'url' => $tmp->getThumbUrl()
-            	);
-            	$this->getDb()->insert('Thumbs',$dataThumbs);
-            	unset($dataPictures);
-            	unset($dataThumbs);
+           		$item->save($idMachine);
             }
           
         }

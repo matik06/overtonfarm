@@ -500,7 +500,7 @@ body
 	line-height: 120%;
 	width: auto;	
 	overflow: hidden;
-	padding-left: 200px;	
+	padding-left: 150px;	
 }
 
 #main div.title
@@ -743,4 +743,20 @@ div.machine-photos
 input.edit-machine
 {
 	width: 135px;
+}
+
+textarea.machine-description {
+	height: 80px;
+	width: 350px;
+}
+
+input.machine-description {
+	width: 350px;	
+}
+
+.machine-photos .edit-machine
+{
+	display: inline;
+	float: right;
+	margin-right: 35px;
 }

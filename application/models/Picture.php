@@ -36,11 +36,9 @@ class Model_Picture
 	 */
 	protected $sThumbUrl;
 	
-	/**
-	 * Get picture id
-	 *
-	 * @return int|null
-	 */
+	protected $iOrdr;
+	
+	protected $iThumbIdPicture;
 	 
 	 protected $_mapper;
 	
@@ -56,6 +54,7 @@ class Model_Picture
 		$this->sThumbName = $thName;
 		$this->sThumbUrl = $thUrl;
 	}
+	
 	*/
 	public function getId()
 	{
@@ -160,7 +159,7 @@ class Model_Picture
 	{
 		$this->sUrl = (string)$url;	
 		return $this;
-	}
+	}	
 	
 	/**
 	 * Get thumb name
@@ -203,6 +202,28 @@ class Model_Picture
 	public function setThumbUrl($url)
 	{
 		$this->sThumbUrl = (string)$url;	
+		return $this;
+	}
+	
+	public function getThumbPictureId()
+	{
+		return $this->iThumbIdPicture;
+	}
+	
+	public function setThumbPictureId($id)
+	{
+		$this->iThumbIdPicture = $id;
+		return $this;
+	}
+	
+	public function getOrder()
+	{
+		return $this->iOrdr;
+	}
+	
+	public function setOrder($order)
+	{
+		$this->iOrdr = $order;
 		return $this;
 	}
 	
@@ -251,6 +272,16 @@ class Model_Picture
     public function delete($idMachnine)
     {
     	$this->getMapper()->delete($idMachnine);
+    }
+    
+    public function save($idMachine)
+    {
+    	$this->getMapper()->save($this, $idMachine);
+    }
+    
+    public function update()
+    {
+    	$this->getMapper()->update($this);
     }
 }
 ?>
