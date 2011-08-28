@@ -37,6 +37,12 @@ class ModeratorController extends Model_ManagmentController
 	public function addmachineAction()
 	{
 		$this->view->form = $this->getMachineTypeForm();
+		
+		$session = Zend_Registry::get('session');
+		$session->uploadedPhotoCount = 0;
+      	$session->test = array();
+
+		
 		$machinee = new Model_Machine();      
 	}
 
@@ -62,49 +68,13 @@ class ModeratorController extends Model_ManagmentController
             return $this->render('addmachine'); // re-render the adduser form                        
         }        
         
-		$nUploadedPhotos = 0;
-        $photoUtil = new Model_PhotoUtil();
-        $machineType =  $form->getElement('machineType')->getUnfilteredValue();     	 
-      	//pobranie id ostatniego zdjęcia      	
-      	$photoId = Model_Mapper_Picture::getLastId();
-      	      	      	
-
-      	for ($i = 1; $i < 7; $i++) 
-      	{
-      		$photo = $form->getElement('fileupd'.$i)->getValue();
-
-      		if ($photo == null && ($i == 1 || $i == 2))
-      		{      			
-      			$nUploadedPhotos++;      			
-      			$this->setMainPhotos($photo, $machineType, $photoId);
-      			$photoId++;
-      			
-      		} 
-      		else if ($photo != null) 
-      		{      			      			
-      			$nUploadedPhotos++;				      			
-      			$this->savePhoto($photo, $machineType, $photoId);
-      			$photoId++;      			      			
-      		}      			
-      	}      	      	
-      	
-      	//usuwanie oryginalnych zdjęć
-      	for($i = 1; $i < 7; $i++) 
-      	{
-      		$photo = $form->getElement('fileupd'.$i)->getValue();
-      		if ($photo != null)
-      		{
-      			$urlTmpPicture = self::MAIN_PHOTO_URL.$photo;
-		    	unlink($urlTmpPicture);
-      		}
-      	}      	
-      	
+        $machineType =  $form->getElement('machineType')->getUnfilteredValue();
+             	     	
       	$session = Zend_Registry::get('session');
       	$session->machineType = $machineType;
-      	$session->photoCount = $nUploadedPhotos;      	
       	      	      
-     	$form = $this->getMachineDescriptionForm("addmachineprocess2");     	
-      	$this->view->form = $form;      	
+     	$form = $this->getMachineDescriptionForm("addmachineprocess2");     	     	     
+      	$this->view->form = $form;      	      	
 	}
 	
 	
@@ -171,16 +141,61 @@ class ModeratorController extends Model_ManagmentController
         
         
         $machinee = new Model_Machine();        
-        $session = Zend_Registry::get('session');
-        
-		$machineType = $session->machineType;
-		$photoCount = $session->photoCount;   
+        $session = Zend_Registry::get('session');        
+		$machineType = $session->machineType;		   
 		
       	$MainType = $machinee->getMainTypeAll($machineType);	//typ główny maszyny
       	$SecondaryType = $machinee->getSecondaryTypeAll($machineType);	//podtyp maszyny      	         	
       	$url = self::MAIN_PHOTO_URL.$MainType->name.'/'.$SecondaryType->name.'/';
+      	
+      	      	
+        $photoUtil = new Model_PhotoUtil();             	 
+      	//pobranie id ostatniego zdjęcia      	
+      	$photoId = Model_Mapper_Picture::getLastId();
+		      	      	      	
+
+      	$totalPhotoCouter = 0;
+      	if($session->uploadedPhotoCount == 0)	//użytkownik nie wybrał żadnego zdjęcia
+      	{
+      		$this->setMainPhotos(null, $machineType, $photoId);
+      		$photoId++;
+      		$this->setMainPhotos(null, $machineType, $photoId);
+      		$photoId++;
+      		$totalPhotoCouter = 2;
+      	} 
+      	else if( $session->uploadedPhotoCount == 1 )	//użytkownik wybrał 1 zdjęcie
+      	{      		
+      		
+      		$photo = $session->test[0];
+	
+	      	$this->savePhoto($photo, $machineType, $photoId);
+	      	$photoId++;      			      			
+	      	$this->setMainPhotos(null, $machineType, $photoId);
+      		$photoId++;
+      		$totalPhotoCouter = 2;
+      	}
+      	else	//użytkownik wybrał 2 lub więcej zdjęć
+      	{
+      	    for ($i = 0; $i < $session->uploadedPhotoCount; $i++) 
+	      	{
+	      		$photo = $session->test[$i];
+	
+	      		$this->savePhoto($photo, $machineType, $photoId);
+	      		$photoId++;      			      			      			
+	      	}
+	      	$totalPhotoCouter = $session->uploadedPhotoCount;
+      	}
       	      	      	
-		$pictures = $this->getPhotos($photoCount, $url);      	      	
+      	//usuwanie oryginalnych zdjęć
+      	for($i = 0; $i < $session->uploadedPhotoCount; $i++) 
+      	{
+      		$photo = $session->test[$i];
+      			$urlTmpPicture = self::MAIN_PHOTO_URL.$photo;
+		    	unlink($urlTmpPicture);
+      	}      	      	      	
+      	
+      	      	      	
+		$pictures = $this->getPhotos($totalPhotoCouter, $url);      	      	
       	$machine = new Model_Machine();
       	
       	$machine->setCondition('default');
@@ -516,6 +531,20 @@ class ModeratorController extends Model_ManagmentController
         }
 	        
         return $mainType.'/machines/main/'.$mainIdType.'/secondary/0/';
+	}
+	
+	public function uploadpicturesAction()
+	{
+		$request = $this->getRequest();
+		
+	 	if (!$request->isPost()) 
+        {        	
+            $this->_redirect('/moderator/addmachine');
+        }
+		
+		$session = Zend_Registry::get('session');
+		$session->uploadedPhotoCount = $session->uploadedPhotoCount+1;
+      	$session->test[] = $_REQUEST["filaName"];
 	}
 	
 }
