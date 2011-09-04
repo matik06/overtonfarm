@@ -263,6 +263,18 @@ class Model_Picture
         return $this->getMapper()->fetchAll($this->getMachineId());
     }
     
+    public function getPictureByThumbId($id)
+    {
+    	$this->iThumbId = $id;
+    	return $this->getMapper()->getPictureByThumbId($this);    	
+    }
+    
+    public function getcurrentMaxOrdr($id)
+    {
+    	return Model_Mapper_Picture::getCurrentMaxOrdr($id);
+    }
+    
+    
     /**
      * delete all pictures from harddrive and database
      * 

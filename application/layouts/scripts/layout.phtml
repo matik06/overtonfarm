@@ -37,7 +37,8 @@
 	" />	
 	
 	<!-- Google Analytics -->
-	<script type="text/javascript">	
+	<script type="text/javascript">
+			
 	  var _gaq = _gaq || [];
 	  _gaq.push(['_setAccount', 'UA-25378358-1']);
 	  _gaq.push(['_trackPageview']);
@@ -48,45 +49,10 @@
 	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 	  })();	
 
-	  deleteConfirmation();
+	  //before deleting machine popup confirmation box show up 
+	  deleteConfirmation();	  
 	</script>
-	
-	<!-- Uploadify -->
-      <link href="/uploadify/uploadify.css" type="text/css" rel="stylesheet" />
-      <script type="text/javascript" src="/uploadify/swfobject.js"></script>
-      <script type="text/javascript" src="/uploadify/jquery.uploadify.v2.1.4.min.js"></script>
-      <script type="text/javascript">
-      $(document).ready(function() {
-        $("input[type='file']").uploadify({
-          'uploader'  : '/uploadify/uploadify.swf',
-          'script'    : '/uploadify/uploadify.php',
-          'cancelImg' : '/uploadify/cancel.png',
-          'folder'    : '/pictures',
-          'buttonText'  : 'Click button to select picture',
-          'displayData' : 'percentage',
-          'fileExt'     : '*.jpg;*.png;*.jpeg;*.JPG;*.JPEG;*.PNG;',
-          'fileDesc'    : 'Image Files',
-          'height'      : 30,
-          'removeCompleted' : false,
-          'simUploadLimit' : 1,
-          'width'       : 120,
-          onComplete  : function(event, ID, fileObj, response, data) {
-        	  $.ajax({
-        		  type: 'POST',
-        		  url: "<?php echo $this->baseUrl().'/moderator/uploadpictures'; ?>",
-        		  data: 'filaName=' + fileObj.name        		  
-        		});              				
-          }
-        });
-
-        $("input[type='submit'][name='submitUploadedPhotos']").bind('click', function() {        	
-        	$("input[type='file']").uploadifyUpload();
-        });
-        
-      });
-      </script>
-	
-  	 
+		  	 
 </head> 
 
 

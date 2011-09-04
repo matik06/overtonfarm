@@ -11,6 +11,14 @@
  */
 class IndexController extends Zend_Controller_Action
 {
+	private $_logger;
+	
+	public function init()
+	{
+		$writer = new Zend_Log_Writer_Stream('logowanie.log', 'a');
+		$this->_logger = new Zend_Log($writer);
+	}
+	
 	public function galeryAction()
 	{
 	
@@ -24,9 +32,11 @@ class IndexController extends Zend_Controller_Action
 	
     public function indexAction()
     {
-    	
+    	$this->_logger->info('This is a warn log message!');
+    	$this->_logger->log('This is a err log message!', Zend_Log::ERR);	
         $machine = new Model_Machine();	        
         $this->view->lm = $machine->GetLastMachines(7);   
+        $this->_logger->log('This is a err log message!', Zend_Log::ERR);
     }
     
 	public function contactusAction()

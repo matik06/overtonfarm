@@ -64,6 +64,16 @@ class Zend_View_Helper_Machines extends Zend_View_Helper_Abstract
         </form>';     
 	}
 	
+	private function getEditMachinePhotosForm($id, $mainId)
+	{
+		return
+		'<form method="post" action="/moderator/editmachinephotos">
+        	<input type="submit" value="Edit Photos" class="edit-machine">
+        	<input type="hidden" name="id" value="'.$id.'">        	
+        	<input type="hidden" name="mainId" value="'.$mainId.'">
+        </form>';
+	}
+	
 	/**
 	 * If user is logged and has administrator or moderator permission 
 	 * then we display delete button
@@ -109,6 +119,17 @@ class Zend_View_Helper_Machines extends Zend_View_Helper_Abstract
 			return '';
 		}
 	} 
+	
+	public function getEditMachinePhotosButton($machineId, $mainId)
+	{
+		$isModerator = $this->checkRole();
+		
+		if ($isModerator) {
+			return $this->getEditMachinePhotosForm($machineId, $mainId);
+		} else {
+			return '';
+		}
+	}
 	
 	
 	/**
@@ -159,7 +180,7 @@ class Zend_View_Helper_Machines extends Zend_View_Helper_Abstract
 				
 				$tabPictures[] = '</ul>';
 				$tabPictures[] = $this->getSwapPhotosButton($machineId, $mainId);				
-				
+				$tabPictures[] = $this->getEditMachinePhotosButton($machineId, $mainId);				
 				$tabPictures[] = '</div>';
 				
 				$tabPictures[] = $this->activateCarousel($machine);

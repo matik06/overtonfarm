@@ -760,3 +760,38 @@ input.machine-description {
 	float: right;
 	margin-right: 35px;
 }
+
+.edit-photos
+{
+	width: 310px;
+	display: inline;
+	
+}
+
+#main div.edit-machine-content
+{
+    border-bottom: 2px solid #000033;
+	border-left: 2px solid #000033;
+	border-right: 2px solid #000033;
+	color: black;
+	line-height: 120%;
+	width: auto;	
+	overflow: hidden;
+	padding-left: 40px;	
+}
+
+div.edit-machine-content .img1
+{
+	margin-left: 60px;
+	margin-top: 10px;
+	width: 133px;
+	height: 99px;
+}
+
+div.edit-machine-content .img2
+{
+	margin-left: 180px;
+	margin-top: 10px;
+	width: 133px;
+	height: 99px;	
+}

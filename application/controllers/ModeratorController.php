@@ -27,6 +27,14 @@ class ModeratorController extends Model_ManagmentController
         ));
 	}
 	
+	public function geEditMachinePhotosForm()
+	{
+		return new Form_EditMachinePhotos(array(
+            'action' => '/moderator/editmachinephotosprocess',
+            'method' => 'post',			
+		));
+	}
+	
 	public function getMachineDetailsAndMachineType() {
 		return new Form_MachineDetailsAndMachineType(array(
 		 	'action' => '/moderator/updatemachineprocess',
@@ -37,12 +45,6 @@ class ModeratorController extends Model_ManagmentController
 	public function addmachineAction()
 	{
 		$this->view->form = $this->getMachineTypeForm();
-		
-		$session = Zend_Registry::get('session');
-		$session->uploadedPhotoCount = 0;
-      	$session->test = array();
-
-		
 		$machinee = new Model_Machine();      
 	}
 
@@ -68,13 +70,49 @@ class ModeratorController extends Model_ManagmentController
             return $this->render('addmachine'); // re-render the adduser form                        
         }        
         
-        $machineType =  $form->getElement('machineType')->getUnfilteredValue();
-             	     	
+		$nUploadedPhotos = 0;
+        $photoUtil = new Model_PhotoUtil();
+        $machineType =  $form->getElement('machineType')->getUnfilteredValue();     	 
+      	//pobranie id ostatniego zdjęcia      	
+      	$photoId = Model_Mapper_Picture::getLastId();
+      	      	      	
+
+      	for ($i = 1; $i < 7; $i++) 
+      	{
+      		$photo = $form->getElement('fileupd'.$i)->getValue();
+
+      		if ($photo == null && ($i == 1 || $i == 2))
+      		{      			
+      			$nUploadedPhotos++;      			
+      			$this->setMainPhotos($photo, $machineType, $photoId);
+      			$photoId++;
+      			
+      		} 
+      		else if ($photo != null) 
+      		{      			      			
+      			$nUploadedPhotos++;				      			
+      			$this->savePhoto($photo, $machineType, $photoId);
+      			$photoId++;      			      			
+      		}      			
+      	}      	      	
+      	
+      	//usuwanie oryginalnych zdjęć
+      	for($i = 1; $i < 7; $i++) 
+      	{
+      		$photo = $form->getElement('fileupd'.$i)->getValue();
+      		if ($photo != null)
+      		{
+      			$urlTmpPicture = self::MAIN_PHOTO_URL.$photo;
+		    	unlink($urlTmpPicture);
+      		}
+      	}      	
+      	
       	$session = Zend_Registry::get('session');
       	$session->machineType = $machineType;
+      	$session->photoCount = $nUploadedPhotos;      	
       	      	      
-     	$form = $this->getMachineDescriptionForm("addmachineprocess2");     	     	     
-      	$this->view->form = $form;      	      	
+     	$form = $this->getMachineDescriptionForm("addmachineprocess2");     	
+      	$this->view->form = $form;      	
 	}
 	
 	
@@ -141,61 +179,16 @@ class ModeratorController extends Model_ManagmentController
         
         
         $machinee = new Model_Machine();        
-        $session = Zend_Registry::get('session');        
-		$machineType = $session->machineType;		   
+        $session = Zend_Registry::get('session');
+        
+		$machineType = $session->machineType;
+		$photoCount = $session->photoCount;   
 		
       	$MainType = $machinee->getMainTypeAll($machineType);	//typ główny maszyny
       	$SecondaryType = $machinee->getSecondaryTypeAll($machineType);	//podtyp maszyny      	         	
       	$url = self::MAIN_PHOTO_URL.$MainType->name.'/'.$SecondaryType->name.'/';
-      	
-      	      	
-        $photoUtil = new Model_PhotoUtil();             	 
-      	//pobranie id ostatniego zdjęcia      	
-      	$photoId = Model_Mapper_Picture::getLastId();
-		      	      	      	
-
-      	$totalPhotoCouter = 0;
-      	if($session->uploadedPhotoCount == 0)	//użytkownik nie wybrał żadnego zdjęcia
-      	{
-      		$this->setMainPhotos(null, $machineType, $photoId);
-      		$photoId++;
-      		$this->setMainPhotos(null, $machineType, $photoId);
-      		$photoId++;
-      		$totalPhotoCouter = 2;
-      	} 
-      	else if( $session->uploadedPhotoCount == 1 )	//użytkownik wybrał 1 zdjęcie
-      	{      		
-      		
-      		$photo = $session->test[0];
-	
-	      	$this->savePhoto($photo, $machineType, $photoId);
-	      	$photoId++;      			      			
-	      	$this->setMainPhotos(null, $machineType, $photoId);
-      		$photoId++;
-      		$totalPhotoCouter = 2;
-      	}
-      	else	//użytkownik wybrał 2 lub więcej zdjęć
-      	{
-      	    for ($i = 0; $i < $session->uploadedPhotoCount; $i++) 
-	      	{
-	      		$photo = $session->test[$i];
-	
-	      		$this->savePhoto($photo, $machineType, $photoId);
-	      		$photoId++;      			      			      			
-	      	}
-	      	$totalPhotoCouter = $session->uploadedPhotoCount;
-      	}
       	      	      	
-      	//usuwanie oryginalnych zdjęć
-      	for($i = 0; $i < $session->uploadedPhotoCount; $i++) 
-      	{
-      		$photo = $session->test[$i];
-      			$urlTmpPicture = self::MAIN_PHOTO_URL.$photo;
-		    	unlink($urlTmpPicture);
-      	}      	      	      	
-      	
-      	      	      	
-		$pictures = $this->getPhotos($totalPhotoCouter, $url);      	      	
+		$pictures = $this->getPhotos($photoCount, $url);      	      	
       	$machine = new Model_Machine();
       	
       	$machine->setCondition('default');
@@ -533,18 +526,148 @@ class ModeratorController extends Model_ManagmentController
         return $mainType.'/machines/main/'.$mainIdType.'/secondary/0/';
 	}
 	
-	public function uploadpicturesAction()
+	
+	
+	public function editmachinephotosAction()
+	{
+		$request = $this->getRequest();
+		           	     	        	
+        $mainId = $_POST['mainId'];
+        $lastURL = $this->getLastUrl($mainId);	
+	    //Check if we have a POST request
+        if (!$request->isPost()) 
+        {        	        
+            $this->_redirect($lastURL);
+        }
+        
+        //get machine by id 
+        $machineId = $_POST["id"];
+        $machine = new Model_Machine();                               
+        $machine = $machine->getMachineById($machineId);
+        //get machine photos
+        $photos = $machine->getPictures();
+        //get form
+        $form = $this->geEditMachinePhotosForm();
+        
+        
+        //upadate form
+        for($i = 0; $i < count($photos); $i++)
+        {        	        	        	
+        	$photo = $photos[$i];
+        	$this->addPhotoDetails($form, $i, $photo);
+        }
+        $form->getElement("machineId")->setValue($machineId); 
+
+        //save last url address in session
+        $session = Zend_Registry::get('session');
+        $session->lastURL = $lastURL;        
+                
+      	$this->view->form = $form;      	
+	}
+	
+	private function addPhotoDetails(Form_EditMachinePhotos $form, $i, Model_Picture $photo)
+	{		
+		$i++;
+		$p = $photo->getThumbUrl().$photo->getThumbName();		
+		$form->getElement("img".$i)->setImage($p);
+		$form->getElement("originFile".$i)->setValue($photo->getThumbId()); 		
+	}
+
+	public function editmachinephotosprocessAction()
 	{
 		$request = $this->getRequest();
 		
-	 	if (!$request->isPost()) 
+		$session = Zend_Registry::get('session');
+		$lastUrl = $session->lastURL;
+		
+	    //Check if we have a POST request
+        if (!$request->isPost()) 
         {        	
             $this->_redirect('/moderator/addmachine');
         }
-		
-		$session = Zend_Registry::get('session');
-		$session->uploadedPhotoCount = $session->uploadedPhotoCount+1;
-      	$session->test[] = $_REQUEST["filaName"];
+        
+         // Get our form and validate it
+        $form = $this->geEditMachinePhotosForm(); 
+        									
+        if (!$form->isValid($request->getPost())) 
+        {        
+            $this->view->form = $form;
+            return $this->render('editmachinephotos'); // re-render the adduser form                        
+        }
+
+        
+        for($i = 1; $i < 7; $i++)
+        {
+        	$fileupd = $form->getElement("fileupd".$i)->getValue();
+        	$thumbId = $form->getElement("originFile".$i)->getValue();
+        	
+        	if ($fileupd != null)
+        	{   
+        		$photoUtil = new Model_PhotoUtil();
+        		$pict = new Model_Picture();        		
+        		$urlTmpPicture = self::MAIN_PHOTO_URL.$fileupd;	//path to uploaded file
+        		     		    		        			
+        		if($thumbId != null)
+        		{        			        			        			
+        			$pict = $pict->getPictureByThumbId($thumbId);        			        			        			        	        			
+        			
+        			$url = $pict->getUrl();
+        			$url = substr($url, 1, strlen($url));
+	      			$urlThumb = $pict->getThumbUrl();
+	      			$urlThumb = substr($urlThumb, 1, strlen($urlThumb));
+
+        			$photoUtil->resampimagejpg(self::THUMBNAIL_WIDTH, self::THUMBNAIL_HEIGHT, $urlTmpPicture, $urlThumb.$pict->getThumbName());
+	      			$photoUtil->resampimagejpg(self::PHOTO_WIDTH, self::PHOTO_HEIGHT, $urlTmpPicture, $url.$pict->getName());	      			        			
+        		} else 
+        		{        			
+        			//get machine id
+        			$machineId = $form->getElement("machineId")->getValue();
+        			//next photo order
+        			$maxCurrentOrder = Model_Picture::getcurrentMaxOrdr($machineId);
+        			$nextOrder = $maxCurrentOrder + 1;
+        			//new photo name         			        			        			
+        			$photoName = Model_Mapper_Picture::getLastId().".jpg";
+        			//last machine photo        	
+
+        			//get first machine picture
+        			$machine = new Model_Machine();        			
+        			$machine = $machine->getMachineById($machineId);
+        			$pictures = $machine->getPictures();
+        			$picture = $pictures[0];
+        			
+        			//generate picture foler path
+        			$url = $picture->getUrl();
+        			$url = substr($url, 1, strlen($url));
+	      			$urlThumb = $picture->getThumbUrl();
+	      			$urlThumb = substr($urlThumb, 1, strlen($urlThumb));
+        			
+	      			echo("test");
+	      			//save rezized pictures
+	      			$photoUtil->resampimagejpg(self::THUMBNAIL_WIDTH, self::THUMBNAIL_HEIGHT, $urlTmpPicture, $urlThumb.$photoName);
+	      			$photoUtil->resampimagejpg(self::PHOTO_WIDTH, self::PHOTO_HEIGHT, $urlTmpPicture, $url.$photoName);	      				      			
+
+	      			//create and save photo
+	      			$newPicture = new Model_Picture();
+	      			
+	      			$newPicture->setMachineId($machineId);
+	      			$newPicture->setName($photoName);
+	      			$newPicture->setOrder($nextOrder);
+	      			$newPicture->setThumbName($photoName);	      			
+	      			$newPicture->setThumbUrl($picture->getThumbUrl());
+	      			$newPicture->setUrl($picture->getUrl());
+	      			echo($machineId);
+
+	      			$newPicture->save($machineId);
+        		}
+        		
+        		//delete original photo (full size)
+        		unlink($urlTmpPicture);
+        	}
+        	
+
+        }
+        
+        $this->_redirect($lastUrl);
 	}
 	
 }

@@ -51,6 +51,23 @@ class Model_Mapper_Picture
     	return $result;
     }
     
+    public function getCurrentMaxOrdr($machineId)
+    {
+    	$db = Zend_Registry::get('db');
+    	
+    	$sql = 'SELECT max(ordr) FROM Pictures
+				WHERE idMachine = '.$machineId;
+    	$sqlResult = $db->fetchRow($sql);
+    	
+    	$result = 0;
+    	foreach($sqlResult as $row)
+    	{
+    		$result = $row;
+    	}
+    	
+    	return $result;    	
+    }
+    
      /**
    	 *  Fetch all entries
      * 
@@ -86,6 +103,35 @@ class Model_Mapper_Picture
         	}
         	
         	return $entries;   
+    }
+    
+    public function getPictureByThumbId(Model_Picture $pic)
+    {
+    	$sql = 'SELECT p.id \'id\', p.idMachine \'idMachine\', p.name \'name\', p.url \'url\', p.ordr \'ordr\',
+    	t.id \'thumbId\' ,t.name \'thumbName\', t.url \'thumbUrl\', t.idPicture \'thumbIdPicture\'  
+    	FROM Pictures as p 
+    	JOIN Thumbs as t ON p.id = t.idPicture 
+    	WHERE t.id='.$pic->getThumbId();
+        	
+        $queryResult = $this->getDb()->fetchAll($sql);
+        
+       //array to store all machines
+       $picture = new Model_Picture();     
+
+     	foreach ($queryResult as $row) {    
+            $picture->setId($row->id)  
+            	  	->setMachineId($row->idMachine)  	  
+            	  	->setName($row->name) 
+            	  	->setUrl($row->url) 
+            	  	->setOrder($row->ordr)
+           		  	->setThumbid($row->thumbId) 
+             	  	->setThumbName($row->thumbName) 	
+             	  	->setThumbPictureId($row->thumbIdPicture)
+            	  	->setThumbUrl($row->thumbUrl) 	            	  
+            	  	->setMapper($this);               
+        	}
+        	
+        	return $picture;      
     }
     
     public function save(Model_Picture $picture, $idMachine) 

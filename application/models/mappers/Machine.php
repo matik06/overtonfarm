@@ -43,9 +43,7 @@ class Model_Mapper_Machine
     			
    		$sql = 'SELECT * FROM Machines 
     		WHERE (idSecondaryType='.(int)$secondaryType.')AND(idMainType='.(int)$mainType.')
-    		ORDER BY id DESC' ;
-    	 
-    			
+    		ORDER BY id DESC' ;    	     			
     		
     	$this->getDb()->setFetchMode(Zend_Db::FETCH_OBJ);    	
         $resultSet = $this->getDb()->fetchAll($sql);
@@ -381,7 +379,7 @@ class Model_Mapper_Machine
   
         
         return $entries;
-    }
+    }    
 }
 
 ?>

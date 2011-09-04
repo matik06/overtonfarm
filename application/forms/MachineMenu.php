@@ -50,36 +50,42 @@ class Form_MachineMenu extends Zend_Form
         $this->fileupd1->setLabel('select first photo');
         $this->fileupd1->addValidator('count', false, 1)
         			->addValidator('Extension', false, 'jpg,png,gif,jpeg');
+        			
         $this->fileupd1->setDestination('pictures/');
        
         $this->fileupd2 = new Zend_Form_Element_File('fileupd2');
         $this->fileupd2->setLabel('select second photo');
         $this->fileupd2->addValidator('count', false, 1)
-        			->addValidator('Extension', false, 'jpg,png,gif,jpeg');
+        			->addValidator('Extension', false, 'jpg,png,gif,jpeg')
+        			->addValidator('Size', false, array('max' => 5242880));
         $this->fileupd2->setDestination('pictures/');
         
         $this->fileupd3 = new Zend_Form_Element_File('fileupd3');
         $this->fileupd3->setLabel('select third photo');
         $this->fileupd3->addValidator('count', false, 1)
-        			->addValidator('Extension', false, 'jpg,png,gif,jpeg');        
+        			->addValidator('Extension', false, 'jpg,png,gif,jpeg')
+        			->addValidator('Size', false, array('max' => 5242880));
         $this->fileupd3->setDestination('pictures/');
         
         $this->fileupd4 = new Zend_Form_Element_File('fileupd4');
         $this->fileupd4->setLabel('select fourth photo');
         $this->fileupd4->addValidator('count', false, 1)
-        			->addValidator('Extension', false, 'jpg,png,gif,jpeg');
+        			->addValidator('Extension', false, 'jpg,png,gif,jpeg')
+        			->addValidator('Size', false, array('max' => 5242880));
         $this->fileupd4->setDestination('pictures/');
         
         $this->fileupd5 = new Zend_Form_Element_File('fileupd5');
         $this->fileupd5->setLabel('select fifth photo');
         $this->fileupd5->addValidator('count', false, 1)
-        			->addValidator('Extension', false, 'jpg,png,gif,jpeg');
+        			->addValidator('Extension', false, 'jpg,png,gif,jpeg')
+        			->addValidator('Size', false, array('max' => 5242880));
         $this->fileupd5->setDestination('pictures/');
 
         $this->fileupd6 = new Zend_Form_Element_File('fileupd6');
         $this->fileupd6->setLabel('select sixth photo');
         $this->fileupd6->addValidator('count', false, 1)
-        			->addValidator('Extension', false, 'jpg,png,gif,jpeg');
+        			->addValidator('Extension', false, 'jpg,png,gif,jpeg')
+        			->addValidator('Size', false, array('max' => 5242880));
         $this->fileupd6->setDestination('pictures/');   
 			 
 		$this->submit = new Zend_Form_Element_Submit('submitUploadedPhotos');
