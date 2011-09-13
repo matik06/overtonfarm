@@ -1,0 +1,6 @@
+.settings/
+.project
+.metadata/
+index.html
+*.log
+public/pictures/
