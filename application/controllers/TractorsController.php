@@ -1,6 +1,6 @@
 <?php
 
-class TractorsController extends Model_ManagmentController
+class TractorsController extends Zend_Controller_Action
 {
 	public function machinesAction()
 	{		

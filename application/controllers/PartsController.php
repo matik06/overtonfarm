@@ -1,6 +1,6 @@
 <?php
 
-class PartsController extends Model_ManagmentController
+class PartsController extends Zend_Controller_Action
 {
 		public function machinesAction()
 	{		

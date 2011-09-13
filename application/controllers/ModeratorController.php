@@ -1,7 +1,9 @@
 <?php
 
-class ModeratorController extends Model_ManagmentController 
+class ModeratorController extends Zend_Controller_Action 
 {
+	private $logger;
+	
 	//size of scaled photo
 	const PHOTO_WIDTH = 640;
 	const PHOTO_HEIGHT = 480;
@@ -13,6 +15,12 @@ class ModeratorController extends Model_ManagmentController
 	//path to main directory with uploaded photos
 	const MAIN_PHOTO_URL = "pictures/";
 	
+	public function init()
+	{
+		$session = Zend_Registry::get('session');
+      	$this->logger = $session->logger;
+	}
+	 
 	
 	public function indexAction()
 	{
@@ -45,7 +53,8 @@ class ModeratorController extends Model_ManagmentController
 	public function addmachineAction()
 	{
 		$this->view->form = $this->getMachineTypeForm();
-		$machinee = new Model_Machine();      
+		$machinee = new Model_Machine();    
+//		$this->logger->info("inrormation :):):)");  
 	}
 
 	public function addmachineprocess1Action()

@@ -1,6 +1,6 @@
 <?php
 
-class OthersController extends Model_ManagmentController
+class OthersController extends Zend_Controller_Action
 {
 	public function machinesAction()
 	{

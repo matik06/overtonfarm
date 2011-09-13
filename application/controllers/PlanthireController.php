@@ -1,6 +1,6 @@
 <?php
 
-class PlanthireController extends Model_ManagmentController
+class PlanthireController extends Zend_Controller_Action
 {
 	public function machinesAction()
 	{

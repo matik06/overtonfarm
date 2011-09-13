@@ -1,6 +1,6 @@
 <?php
 
-class AdministratorController extends Model_ManagmentController
+class AdministratorController extends Zend_Controller_Action
 {
 	public function indexAction()
 	{		
@@ -8,11 +8,7 @@ class AdministratorController extends Model_ManagmentController
 		$form->setAttrib('enctype', 'multipart/form-data');
 		//$form->photo->setDestination('/pictures');
 
-		$adapter = $form->photo->getTransferAdapter();
-        
-        
-		
-
+		$adapter = $form->photo->getTransferAdapter();                		
         $this->view->form = $form; 
 	}
 	

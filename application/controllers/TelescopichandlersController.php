@@ -1,6 +1,6 @@
 <?php
 
-class TelescopicHandlersController extends Model_ManagmentController
+class TelescopicHandlersController extends Zend_Controller_Action
 {	
 	public function machinesAction()
 	{
