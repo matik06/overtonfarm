@@ -62,4 +62,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 			DEBUG   = 7;  // Debug: debug messages
 		 */ 	
     }
+    
+    protected function _initLocale() 
+    {
+		Zend_Loader::loadClass('Zend_Translate');
+		Zend_Loader::loadClass('Zend_Registry');
+		$translate = new Zend_Translate('gettext', './languages');		
+		$registry = Zend_Registry::getInstance();
+		$registry->set('Zend_Translate', $translate);
+		
+    }
 }

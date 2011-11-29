@@ -21,7 +21,8 @@ class IndexController extends Zend_Controller_Action
 	
 	public function galeryAction()
 	{
-		
+		$lang = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+		$this->logger->info($lang);
 	}
 
 
