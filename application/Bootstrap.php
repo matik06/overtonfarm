@@ -65,11 +65,16 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     
     protected function _initLocale() 
     {
-		Zend_Loader::loadClass('Zend_Translate');
-		Zend_Loader::loadClass('Zend_Registry');
-		$translate = new Zend_Translate('gettext', './languages');		
-		$registry = Zend_Registry::getInstance();
-		$registry->set('Zend_Translate', $translate);
+    	//die($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+    	
+    	bindtextdomain('*', APPLICATION_PATH . '/../locales');
+    	bind_textdomain_codeset('messages', 'UTF-8');
+    	setlocale(LC_MESSAGES, 'pl_PL.utf8');
+//		Zend_Loader::loadClass('Zend_Translate');
+//		Zend_Loader::loadClass('Zend_Registry');
+//		$translate = new Zend_Translate('gettext', './languages');		
+//		$registry = Zend_Registry::getInstance();
+//		$registry->set('Zend_Translate', $translate);
 		
     }
 }

@@ -15,6 +15,12 @@
 		<p>Centrally located between the M1 & M6, J.A. Bloor Agriservices prides itself on selling and hiring high quality
 		tractors and a selection of farm machinery at highly competitive prices.</p>
 
+		
+		<?php echo _("test") ?>
+		nieprzetłumaczone
+	
+
+
 		<p>With a lifelong interest in farm machinery and still actively farming, Jason Bloor provides a hands-on, personal
 		practical service along with years of experience and knowledge to understand his customers' needs.</p>
 
@@ -46,6 +52,7 @@
 				$counter = new Model_Counter();
         		$counter->loadHits();
         		echo $counter->getHits(); 
+        		$counter->increment();
 			?>
 			<!-- (c) 2006 DarmoweLiczniki.pl - Największy wybór w sieci -->
 <!--

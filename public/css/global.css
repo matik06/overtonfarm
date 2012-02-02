@@ -532,17 +532,7 @@ body
 	overflow: hidden;
 }
 
-#main div.img
-{    
-    margin: 2px;
-    margin-top: 8px;
-    height: auto;
-    width: auto;
-    float: right;
 
-    margin-right: 25px; 
-    
-}
 
 #main div.lastarrivals
 {
@@ -561,15 +551,6 @@ body
     filter:alpha(opacity=85)
 }
 
-img.galery
-{
-	display: inline;     
-    margin-right: 59px;
-    margin-top: 30px;
-    border: solid 1px black;
-    opacity:0.85;
-    filter:alpha(opacity=85)
-}
 
 img.lastarrivals
 {
@@ -580,15 +561,6 @@ img.lastarrivals
     border: thin solid black;
 }
 
-
-#main div.click
-{
-    text-align: center;
-    margin-top: 2px;
-    font-weight: bold;
-    font-size: 8pt;
-    margin-left: 5px;
-}
 
 #main div.click2
 {
@@ -794,4 +766,46 @@ div.edit-machine-content .img2
 	margin-top: 10px;
 	width: 133px;
 	height: 99px;	
+}
+
+<!--Galeria-->
+
+
+.gallery .img {
+	width: 300px;
+}
+
+#main div.img
+{    
+    margin: 2px;
+    margin-top: 8px;
+    height: auto;
+    width: 240px;
+    float: left;
+
+    margin-right: 35px; 
+    
+}
+
+#main div.first_gal {
+	margin-left: 100px;
+}
+	
+#main div.click
+{
+	text-align: center;	    
+    margin-top: 2px;
+    font-weight: bold;
+    font-size: 8pt;
+    margin-left: 5px;
+}
+
+img.galery
+{
+	display: inline;     
+    margin-left: 40px;
+    margin-top: 30px;
+    border: solid 1px black;
+    opacity:0.85;
+    filter:alpha(opacity=85)
 }
